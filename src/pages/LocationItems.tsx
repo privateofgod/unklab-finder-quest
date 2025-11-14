@@ -1,25 +1,34 @@
-import { useState } from "react";
+import { useParams, Link } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { MapPin, Calendar, Phone, PackageOpen } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { MapPin, Calendar, Phone, PackageOpen, ArrowLeft } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import { format } from "date-fns";
+import gk1 from "@/assets/gk1.jpg";
+import library from "@/assets/library.jpg";
+import dormitory from "@/assets/dormitory.jpg";
 
-const Browse = () => {
-  const [activeTab, setActiveTab] = useState("all");
-  const [selectedLocation, setSelectedLocation] = useState<string>("all");
+const getLocationImage = (code: string) => {
+  if (code.startsWith('GK') || code === 'GA') return gk1;
+  if (code === 'PC') return library;
+  if (code.includes('JASMINE') || code.includes('EDEN') || code.includes('CRYSTAL') || code.includes('GUESTHOUSE')) return dormitory;
+  return gk1;
+};
 
-  const { data: locations } = useQuery({
-    queryKey: ['locations'],
+const LocationItems = () => {
+  const { locationId } = useParams();
+
+  const { data: location } = useQuery({
+    queryKey: ['location', locationId],
     queryFn: async () => {
       const { data, error } = await supabase
         .from('locations')
         .select('*')
-        .order('name');
+        .eq('id', locationId)
+        .single();
       
       if (error) throw error;
       return data;
@@ -27,28 +36,13 @@ const Browse = () => {
   });
 
   const { data: items, isLoading } = useQuery({
-    queryKey: ['items', activeTab, selectedLocation],
+    queryKey: ['location-items', locationId],
     queryFn: async () => {
-      let query = supabase
+      const { data, error } = await supabase
         .from('items')
-        .select(`
-          *,
-          locations (
-            name,
-            code
-          )
-        `)
+        .select('*')
+        .eq('location_id', locationId)
         .order('created_at', { ascending: false });
-
-      if (activeTab !== 'all') {
-        query = query.eq('status', activeTab);
-      }
-
-      if (selectedLocation !== 'all') {
-        query = query.eq('location_id', selectedLocation);
-      }
-
-      const { data, error } = await query;
       
       if (error) throw error;
       return data;
@@ -60,42 +54,43 @@ const Browse = () => {
       <Navbar />
       
       <div className="container mx-auto px-4 py-12">
-        <div className="mb-8">
-          <h1 className="text-4xl font-bold mb-2 text-foreground">Browse Items</h1>
-          <p className="text-muted-foreground">
-            View all lost and found items reported on campus
-          </p>
-        </div>
+        <Link to="/locations">
+          <Button variant="ghost" className="mb-6 gap-2">
+            <ArrowLeft className="h-4 w-4" />
+            Back to Locations
+          </Button>
+        </Link>
 
-        <div className="flex flex-col md:flex-row gap-4 mb-8">
-          <Tabs value={activeTab} onValueChange={setActiveTab} className="flex-1">
-            <TabsList className="grid w-full max-w-md grid-cols-3">
-              <TabsTrigger value="all">All Items</TabsTrigger>
-              <TabsTrigger value="lost">Lost</TabsTrigger>
-              <TabsTrigger value="found">Found</TabsTrigger>
-            </TabsList>
-          </Tabs>
-
-          <div className="w-full md:w-64">
-            <Select value={selectedLocation} onValueChange={setSelectedLocation}>
-              <SelectTrigger>
-                <SelectValue placeholder="Filter by location" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Locations</SelectItem>
-                {locations?.map((location) => (
-                  <SelectItem key={location.id} value={location.id}>
-                    {location.name} ({location.code})
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+        {location && (
+          <div className="mb-8">
+            <div className="relative h-64 rounded-lg overflow-hidden mb-6">
+              <img 
+                src={getLocationImage(location.code)} 
+                alt={location.name}
+                className="w-full h-full object-cover"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end">
+                <div className="p-6">
+                  <h1 className="text-4xl font-bold text-white mb-2">{location.name}</h1>
+                  <p className="text-white/90">{location.description}</p>
+                </div>
+              </div>
+            </div>
           </div>
+        )}
+
+        <div className="mb-6">
+          <h2 className="text-2xl font-bold text-foreground mb-2">
+            Items at this Location
+          </h2>
+          <p className="text-muted-foreground">
+            {items?.length || 0} item(s) reported
+          </p>
         </div>
 
         {isLoading ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {[1, 2, 3, 4, 5, 6].map((i) => (
+            {[1, 2, 3].map((i) => (
               <Card key={i} className="animate-pulse">
                 <div className="h-48 bg-muted"></div>
                 <CardHeader>
@@ -146,13 +141,6 @@ const Browse = () => {
                   </p>
                   
                   <div className="space-y-2 pt-2 border-t">
-                    <div className="flex items-center gap-2 text-sm">
-                      <MapPin className="h-4 w-4 text-primary" />
-                      <span className="text-foreground font-medium">
-                        {item.locations?.name} ({item.locations?.code})
-                      </span>
-                    </div>
-                    
                     <div className="flex items-center gap-2 text-sm text-muted-foreground">
                       <Calendar className="h-4 w-4" />
                       <span>{format(new Date(item.reported_date), 'MMM dd, yyyy')}</span>
@@ -174,9 +162,7 @@ const Browse = () => {
           <Card className="p-12 text-center">
             <PackageOpen className="h-16 w-16 mx-auto mb-4 text-muted-foreground" />
             <CardDescription className="text-lg">
-              {selectedLocation !== 'all' 
-                ? 'No items found at this location yet.'
-                : 'No items reported yet. Be the first to help the community!'}
+              No items reported at this location yet.
             </CardDescription>
           </Card>
         )}
@@ -185,4 +171,4 @@ const Browse = () => {
   );
 };
 
-export default Browse;
+export default LocationItems;

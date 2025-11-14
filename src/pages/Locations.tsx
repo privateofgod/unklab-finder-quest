@@ -1,6 +1,8 @@
 import { useQuery } from "@tanstack/react-query";
+import { Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 import { MapPin } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import gk1 from "@/assets/gk1.jpg";
@@ -25,6 +27,27 @@ const Locations = () => {
       
       if (error) throw error;
       return data;
+    },
+  });
+
+  const { data: itemCounts } = useQuery({
+    queryKey: ['location-item-counts'],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('items')
+        .select('location_id');
+      
+      if (error) throw error;
+      
+      // Count items per location
+      const counts: Record<string, number> = {};
+      data.forEach(item => {
+        if (item.location_id) {
+          counts[item.location_id] = (counts[item.location_id] || 0) + 1;
+        }
+      });
+      
+      return counts;
     },
   });
 
@@ -54,31 +77,42 @@ const Locations = () => {
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {locations?.map((location) => (
-              <Card 
-                key={location.id} 
-                className="overflow-hidden shadow-[var(--card-shadow)] hover:shadow-[var(--card-hover-shadow)] transition-all cursor-pointer border-2 group"
-              >
-                <div className="relative h-48 overflow-hidden bg-muted">
-                  <img 
-                    src={getLocationImage(location.code)} 
-                    alt={location.name}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
-                  <div className="absolute bottom-4 left-4 flex items-center gap-2">
-                    <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary">
-                      <MapPin className="h-4 w-4 text-primary-foreground" />
+            {locations?.map((location) => {
+              const itemCount = itemCounts?.[location.id] || 0;
+              return (
+                <Link key={location.id} to={`/location/${location.id}`}>
+                  <Card 
+                    className="overflow-hidden shadow-[var(--card-shadow)] hover:shadow-[var(--card-hover-shadow)] transition-all cursor-pointer border-2 group"
+                  >
+                    <div className="relative h-48 overflow-hidden bg-muted">
+                      <img 
+                        src={getLocationImage(location.code)} 
+                        alt={location.name}
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
+                      <div className="absolute bottom-4 left-4 flex items-center gap-2">
+                        <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary">
+                          <MapPin className="h-4 w-4 text-primary-foreground" />
+                        </div>
+                        <span className="text-white font-semibold text-lg">{location.code}</span>
+                      </div>
+                      {itemCount > 0 && (
+                        <div className="absolute top-4 right-4">
+                          <Badge className="bg-primary text-primary-foreground">
+                            {itemCount} item{itemCount !== 1 ? 's' : ''}
+                          </Badge>
+                        </div>
+                      )}
                     </div>
-                    <span className="text-white font-semibold text-lg">{location.code}</span>
-                  </div>
-                </div>
-                <CardHeader>
-                  <CardTitle className="text-foreground">{location.name}</CardTitle>
-                  <CardDescription>{location.description}</CardDescription>
-                </CardHeader>
-              </Card>
-            ))}
+                    <CardHeader>
+                      <CardTitle className="text-foreground">{location.name}</CardTitle>
+                      <CardDescription>{location.description}</CardDescription>
+                    </CardHeader>
+                  </Card>
+                </Link>
+              );
+            })}
           </div>
         )}
       </div>

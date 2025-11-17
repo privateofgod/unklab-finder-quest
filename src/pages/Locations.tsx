@@ -7,12 +7,18 @@ import { MapPin } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import gk1 from "@/assets/gk1.jpg";
 import library from "@/assets/library.jpg";
-import dormitory from "@/assets/dormitory.jpg";
+import jasmineDorm from "@/assets/jasmine-dorm.jpg";
+import edelweissDorm from "@/assets/edelweiss-dorm.jpg";
+import crystalDorm from "@/assets/crystal-dorm.jpg";
+import guesthouse from "@/assets/guesthouse.jpg";
 
 const getLocationImage = (code: string) => {
   if (code.startsWith('GK') || code === 'GA') return gk1;
   if (code === 'PC') return library;
-  if (code.includes('JASMINE') || code.includes('EDEN') || code.includes('CRYSTAL') || code.includes('GUESTHOUSE')) return dormitory;
+  if (code.includes('JASMINE')) return jasmineDorm;
+  if (code.includes('EDELWEISS')) return edelweissDorm;
+  if (code.includes('CRYSTAL')) return crystalDorm;
+  if (code.includes('GUESTHOUSE')) return guesthouse;
   return gk1;
 };
 

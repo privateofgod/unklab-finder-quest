@@ -16,9 +16,9 @@ const Home = () => {
           <img 
             src={heroBg} 
             alt="UNKLAB Campus" 
-            className="w-full h-full object-cover opacity-20"
+            className="w-full h-full object-cover opacity-60"
           />
-          <div className="absolute inset-0 bg-gradient-to-b from-background/80 to-background"></div>
+          <div className="absolute inset-0 bg-gradient-to-b from-background/40 to-background/70"></div>
         </div>
         
         <div className="container mx-auto px-4 py-20 relative z-10">

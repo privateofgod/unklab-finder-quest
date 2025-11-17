@@ -17,8 +17,8 @@ All colors MUST be HSL.
     --popover: 0 0% 100%;
     --popover-foreground: 215 25% 15%;
 
-    --primary: 217 91% 60%;
-    --primary-foreground: 0 0% 100%;
+    --primary: 51 100% 50%;
+    --primary-foreground: 0 0% 0%;
 
     --secondary: 210 40% 96%;
     --secondary-foreground: 215 25% 15%;
@@ -34,14 +34,14 @@ All colors MUST be HSL.
 
     --border: 214 32% 91%;
     --input: 214 32% 91%;
-    --ring: 217 91% 60%;
+    --ring: 51 100% 50%;
     
     --success: 142 76% 36%;
     --success-foreground: 0 0% 100%;
     
-    --hero-gradient: linear-gradient(135deg, hsl(217 91% 60%) 0%, hsl(217 91% 70%) 100%);
-    --card-shadow: 0 2px 8px -2px hsl(217 91% 60% / 0.1);
-    --card-hover-shadow: 0 8px 24px -4px hsl(217 91% 60% / 0.15);
+    --hero-gradient: linear-gradient(135deg, hsl(51 100% 50%) 0%, hsl(51 100% 60%) 100%);
+    --card-shadow: 0 2px 8px -2px hsl(51 100% 50% / 0.1);
+    --card-hover-shadow: 0 8px 24px -4px hsl(51 100% 50% / 0.15);
     
     --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 
@@ -61,7 +61,7 @@ All colors MUST be HSL.
 
     --sidebar-border: 220 13% 91%;
 
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    --sidebar-ring: 51 100% 50%;
   }
 
   .dark {
@@ -74,8 +74,8 @@ All colors MUST be HSL.
     --popover: 215 28% 15%;
     --popover-foreground: 210 40% 98%;
 
-    --primary: 217 91% 60%;
-    --primary-foreground: 0 0% 100%;
+    --primary: 51 100% 50%;
+    --primary-foreground: 0 0% 0%;
 
     --secondary: 215 28% 20%;
     --secondary-foreground: 210 40% 98%;
@@ -91,12 +91,12 @@ All colors MUST be HSL.
 
     --border: 215 28% 25%;
     --input: 215 28% 25%;
-    --ring: 217 91% 60%;
+    --ring: 51 100% 50%;
     
     --success: 142 76% 36%;
     --success-foreground: 0 0% 100%;
     
-    --hero-gradient: linear-gradient(135deg, hsl(217 91% 50%) 0%, hsl(217 91% 60%) 100%);
+    --hero-gradient: linear-gradient(135deg, hsl(51 100% 40%) 0%, hsl(51 100% 50%) 100%);
     --card-shadow: 0 2px 8px -2px hsl(0 0% 0% / 0.3);
     --card-hover-shadow: 0 8px 24px -4px hsl(0 0% 0% / 0.4);
     --sidebar-background: 240 5.9% 10%;
@@ -106,7 +106,7 @@ All colors MUST be HSL.
     --sidebar-accent: 240 3.7% 15.9%;
     --sidebar-accent-foreground: 240 4.8% 95.9%;
     --sidebar-border: 240 3.7% 15.9%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    --sidebar-ring: 51 100% 50%;
   }
 }
 

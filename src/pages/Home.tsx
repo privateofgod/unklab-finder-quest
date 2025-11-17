@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Search, Package, MapPin, CheckCircle } from "lucide-react";
 import Navbar from "@/components/Navbar";
-import heroBg from "@/assets/hero-bg.jpg";
+import heroBg from "@/assets/hero-background.jpg";
 
 const Home = () => {
   return (

@@ -11,17 +11,17 @@ const Home = () => {
       <Navbar />
       
       {/* Hero Section */}
-      <section className="relative overflow-hidden">
+      <section className="relative overflow-hidden h-[70vh] flex items-end">
         <div className="absolute inset-0 z-0">
           <img 
             src={heroBg} 
             alt="UNKLAB Campus" 
-            className="w-full h-full object-cover opacity-60"
+            className="w-full h-full object-cover opacity-90"
           />
-          <div className="absolute inset-0 bg-gradient-to-b from-background/40 to-background/70"></div>
+          <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-background/60"></div>
         </div>
         
-        <div className="container mx-auto px-4 py-32 relative z-10">
+        <div className="container mx-auto px-4 pb-12 relative z-10">
           <div className="max-w-3xl mx-auto text-center">
             <div className="flex flex-wrap gap-4 justify-center">
               <Link to="/report-lost">
@@ -31,7 +31,7 @@ const Home = () => {
                 </Button>
               </Link>
               <Link to="/report-found">
-                <Button size="lg" variant="outline" className="gap-2 shadow-lg hover:shadow-xl transition-all border-2">
+                <Button size="lg" variant="outline" className="gap-2 shadow-lg hover:shadow-xl transition-all border-2 bg-background/90 hover:bg-background">
                   <Package className="h-5 w-5" />
                   Report Found Item
                 </Button>

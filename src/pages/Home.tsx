@@ -21,15 +21,8 @@ const Home = () => {
           <div className="absolute inset-0 bg-gradient-to-b from-background/40 to-background/70"></div>
         </div>
         
-        <div className="container mx-auto px-4 py-20 relative z-10">
+        <div className="container mx-auto px-4 py-32 relative z-10">
           <div className="max-w-3xl mx-auto text-center">
-            <h1 className="text-5xl font-bold mb-6 text-foreground">
-              Lost Something? Found Something?
-            </h1>
-            <p className="text-xl text-muted-foreground mb-8">
-              UNKLAB's trusted platform to reunite lost items with their owners
-            </p>
-            
             <div className="flex flex-wrap gap-4 justify-center">
               <Link to="/report-lost">
                 <Button size="lg" className="gap-2 shadow-lg hover:shadow-xl transition-all">
